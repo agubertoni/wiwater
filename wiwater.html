@@ -1,5 +1,5 @@
 <head>
-    <title>testing_meteor</title>
+    <title>WiWater</title>
 </head>
 
 <body>
@@ -11,6 +11,7 @@
             </h1>
         </div>
         {{> sensorslist}}
+        {{> vis}}
     </div>
 </body>
 
@@ -34,5 +35,8 @@
             </li>
         </ul>
     {{/each}}
+</template>
 
+<template name="vis">
+    <div id="circles"></div>
 </template>
