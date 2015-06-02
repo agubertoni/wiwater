@@ -38,38 +38,53 @@ if (Meteor.isClient) {
     });
 
     Template.vis.rendered = function () {
-        var svg, width = 500, height = 75, x;
 
-        svg = d3.select('#circles').append('svg')
-            .attr('width', width)
-            .attr('height', height);
+        var drawChart = function (update) {
 
-        var drawCircles = function (update) {
-            var data = Circles.findOne().data;
-            var circles = svg.selectAll('circle').data(data);
+            $('#myfirstchart').empty();
+
+            var data = [
+                { year: '2008', value: 20 },
+                { year: '2009', value: 10 },
+                { year: '2010', value: 5 },
+                { year: '2011', value: 5 },
+                { year: '2012', value: 20 }
+            ];
+
+            //var data = WaterSensors.findOne({'node':1}).data;
+
             if (!update) {
-                circles = circles.enter().append('circle')
-                    .attr('cx', function (d, i) { return x(i); })
-                    .attr('cy', height / 2);
             } else {
-                circles = circles.transition().duration(1000);
             }
-            circles.attr('r', function (d) { return d; });
-        };
+
+            if (data) {
+                new Morris.Line({
+                    // ID of the element in which to draw the chart.
+                    element: 'myfirstchart',
+                    // Chart data records -- each entry in this array corresponds to a point on
+                    // the chart.
+                    data:    data,
+                    // The name of the data record attribute that contains x-values.
+                    xkey:    'year',
+                    // A list of names of data record attributes that contain y-values.
+                    ykeys:   ['value'],
+                    // Labels for the ykeys -- will be displayed when you hover over the
+                    // chart.
+                    labels:  ['Value'],
+                    resize:  true
+                });
+            }
+        }
+
 
         Circles.find().observe({
             added: function () {
-                x = d3.scale.ordinal()
-                    .domain(d3.range(Circles.findOne().data.length))
-                    .rangePoints([0, width], 1);
-                drawCircles(false);
+                drawChart(false);
             },
-            changed: _.partial(drawCircles, true)
+            changed: _.partial(drawChart, true)
         });
 
     }; //end rendered
-
-
 
 
 }

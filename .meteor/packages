@@ -8,5 +8,6 @@ meteor-platform
 autopublish
 insecure
 twbs:bootstrap
-d3
 underscore
+clubfest:raphael
+bshamblen:morrisjs
