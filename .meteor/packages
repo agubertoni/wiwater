@@ -9,5 +9,4 @@ autopublish
 insecure
 twbs:bootstrap
 underscore
-clubfest:raphael
-bshamblen:morrisjs
+chart:chart

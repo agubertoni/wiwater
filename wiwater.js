@@ -39,60 +39,52 @@ if (Meteor.isClient) {
 
     Template.vis.rendered = function () {
 
-        var drawChart = function (update) {
+        var ctx = document.getElementById("myChart").getContext("2d");
 
-            $('#myfirstchart').empty();
+        //var f1 = WaterSensors.find({},{fields:{node:1,flow:1},sort:{node:1}}).fetch();
+        //var f1 = WaterSensors.findOne({'node':1}).flow;
+        //var f2 = f1[0].flow;
+        //var f3 = f1[1].flow;
 
-            /*
-            var data = [
-                { year: '2008', value: 20 },
-                { year: '2009', value: 10 },
-                { year: '2010', value: 5 },
-                { year: '2011', value: 5 },
-                { year: '2012', value: 20 }
-            ];
-            */
+        var data = {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [
+                {
+                    label: "My First dataset",
+                    fillColor: "rgba(220,220,220,0.5)",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: [65, 20]
+                },
+                {
+                    label: "My Second dataset",
+                    fillColor: "rgba(151,187,205,0.5)",
+                    strokeColor: "rgba(151,187,205,0.8)",
+                    highlightFill: "rgba(151,187,205,0.75)",
+                    highlightStroke: "rgba(151,187,205,1)",
+                    data: [28, 48]
+                }
+            ]
+        };
 
-            var data = WaterSensors.find({},{fields:{node:1,flow:1},sort:{node:1}}).fetch();
-
-            /*
-            var f1 = WaterSensors.findOne({'node':1}).flow;
-            var data = [
-                { year: '2008', value: f1},
-                { year: '2009', value: f1+10}
-            ];
-            */
-
-            if (!update) {
-            } else {
-            }
-
-            if (data) {
-                new Morris.Bar({
-                    // ID of the element in which to draw the chart.
-                    element: 'myfirstchart',
-                    // Chart data records -- each entry in this array corresponds to a point on
-                    // the chart.
-                    data:    data,
-                    // The name of the data record attribute that contains x-values.
-                    xkey:    'node',
-                    // A list of names of data record attributes that contain y-values.
-                    ykeys:   ['flow'],
-                    // Labels for the ykeys -- will be displayed when you hover over the
-                    // chart.
-                    labels:  ['Value'],
-                    resize:  true
-                });
-            }
-        }
-
-
-        Circles.find().observe({
-            added: function () {
-                drawChart(false);
-            },
-            changed: _.partial(drawChart, true)
+        var myBarChart = new Chart(ctx).Bar(data, {
+            barShowStroke: false
         });
+
+
+
+
+
+        WaterSensors.find().observe({
+            added: function () {
+                myBarChart;
+            },
+            changed: function () {
+                myBarChart;
+            }
+        });
+
 
     }; //end rendered
 
