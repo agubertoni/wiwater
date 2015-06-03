@@ -1,16 +1,13 @@
 WaterSensors = new Mongo.Collection('sensors');
-Circles = new Meteor.Collection('circles');
 
 if (Meteor.isServer) {
     Meteor.startup(function () {
-        if (Circles.find().count() === 0) {
-            Circles.insert({data: [5, 8, 11, 14, 17, 20]});
+        if (WaterSensors.find().count() === 0) {
+            WaterSensors.insert({'node':1, 'flow':1});
+            WaterSensors.insert({'node':2, 'flow':2});
         }
     });
-    Meteor.setInterval(function () {
-        var newData = _.shuffle(Circles.findOne().data);
-        Circles.update({}, {data: newData});
-    }, 2000);
+
 }
 
 if (Meteor.isClient) {
@@ -43,34 +40,48 @@ if (Meteor.isClient) {
 
         //var f1 = WaterSensors.find({},{fields:{node:1,flow:1},sort:{node:1}}).fetch();
         //var f1 = WaterSensors.findOne({'node':1}).flow;
-        //var f2 = f1[0].flow;
+        //var f2 = f1.toString();
         //var f3 = f1[1].flow;
 
-        var data = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.5)",
-                    strokeColor: "rgba(220,220,220,0.8)",
-                    highlightFill: "rgba(220,220,220,0.75)",
-                    highlightStroke: "rgba(220,220,220,1)",
-                    data: [65, 20]
-                },
-                {
-                    label: "My Second dataset",
-                    fillColor: "rgba(151,187,205,0.5)",
-                    strokeColor: "rgba(151,187,205,0.8)",
-                    highlightFill: "rgba(151,187,205,0.75)",
-                    highlightStroke: "rgba(151,187,205,1)",
-                    data: [28, 48]
-                }
-            ]
-        };
+        var data = [
+            {
+                value: 48,
+                color:"#F7464A",
+                highlight: "#FF5A5E",
+                label: "f1"
+            },
+            {
+                value: 50,
+                color: "#46BFBD",
+                highlight: "#5AD3D1",
+                label: "Green"
+            },
+            {
+                value: 100,
+                color: "#FDB45C",
+                highlight: "#FFC870",
+                label: "Yellow"
+            },
+            {
+                value: 40,
+                color: "#949FB1",
+                highlight: "#A8B3C5",
+                label: "Grey"
+            },
+            {
+                value: 120,
+                color: "#4D5360",
+                highlight: "#616774",
+                label: "Dark Grey"
+            }
 
-        var myBarChart = new Chart(ctx).Bar(data, {
-            barShowStroke: false
+        ];
+
+        var myPolarAreaChart = new Chart(ctx).PolarArea(data, {
+            segmentStrokeColor: "#FFFFFF"
         });
+
+
 
 
 
@@ -78,10 +89,10 @@ if (Meteor.isClient) {
 
         WaterSensors.find().observe({
             added: function () {
-                myBarChart;
+                myPolarAreaChart.update();
             },
             changed: function () {
-                myBarChart;
+                myPolarAreaChart.update();
             }
         });
 
