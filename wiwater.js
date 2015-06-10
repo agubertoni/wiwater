@@ -30,25 +30,11 @@ if (Meteor.isClient) {
         }
     });
 
-    Template.vis.rendered = function () {
+    Template.morrisBar.onRendered(function () {
 
-        var drawChart = function (update) {
-
+        var drawChart = function () {
             $('#myfirstchart').empty();
-
             var data = WaterSensors.find({},{fields:{node:1,flow:1},sort:{node:1}}).fetch();
-
-            /*
-            var f1 = WaterSensors.findOne({'node':1}).flow;
-            var data = [
-                { year: '2008', value: f1},
-                { year: '2009', value: f1+10}
-            ];
-            */
-
-            if (!update) {
-            } else {
-            }
 
             if (data) {
                 new Morris.Bar({
@@ -69,15 +55,16 @@ if (Meteor.isClient) {
             }
         }
 
-
         WaterSensors.find().observe({
             added: function () {
-                drawChart(false);
+                drawChart()
             },
-            changed: _.partial(drawChart, true)
+            changed: function () {
+                drawChart()
+            }
         });
 
-    }; //end rendered
+    }); //end rendered
 
 
 }
